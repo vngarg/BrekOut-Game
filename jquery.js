@@ -1,20 +1,24 @@
 var canvas=document.getElementById('myCanvas')
 var ctx=canvas.getContext("2d")
 
-ctx.beginPath()
-ctx.rect(40,50,50,60)
-ctx.fillStyle="red"
-ctx.fill()
-ctx.closePath()
+setInterval(draw,10)
 
-ctx.beginPath()
-ctx.arc(120,120,20,15,Math.PI,true)
-ctx.fillStyle="green"
-ctx.fill() 
-ctx.closePath()
+var x=canvas.width/2
+var y=canvas.height/2
+var dx=2
+var dy=-2
 
-ctx.beginPath()
-ctx.rect(200,100,40,40)
-ctx.strokeStyle="rgba(0,0,0,0.2)"
-ctx.stroke()
-ctx.closePath()
+function drawBall(){
+    ctx.beginPath()
+    ctx.arc(x,y,10,0,Math.PI*2)
+    ctx.fillStyle="lightblue"
+    ctx.fill()
+    ctx.closePath()
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    drawBall()
+    x=x+dx
+    y=y+dy
+}
