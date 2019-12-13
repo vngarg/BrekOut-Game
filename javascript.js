@@ -1,11 +1,11 @@
 var canvas=document.getElementById('myCanvas')
 var ctx=canvas.getContext("2d")
 
-var x=canvas.width/2
-var y=canvas.height/2
+var x=(canvas.width/2)+Math.floor(Math.random()*150)-10
+var y=(canvas.height/2)+Math.floor(Math.random()*150)-60
 var ballRadius=10
-var dx=2
-var dy=-2
+var dx=3
+var dy=-3
 var paddleHeight=10
 var paddleWidth=75
 var paddleX=(canvas.width-paddleWidth)/2
@@ -20,13 +20,20 @@ var brickHeight=20
 var brickWidth=75
 var score=0
 var lives=3
+var level=1
+var maxLevel=5
+var paused=false
 
 var bricks=[]
-for(c=0;c<brickColCount;c++){
-    bricks[c]=[]
-    for(r=0;r<brickRowCount;r++)
-    bricks[c][r]={ x:0 , y:0 , status:1 }
+initBricks()
+function initBricks(){
+    for(c=0;c<brickColCount;c++){
+        bricks[c]=[]
+        for(r=0;r<brickRowCount;r++)
+        bricks[c][r]={ x:0 , y:0 , status:1 }
+    }
 }
+
 
 function drawScore(){
     ctx.font="16px Arial"
@@ -40,6 +47,12 @@ function drawLives(){
     ctx.fillText("Lives: "+lives,canvas.width-65,20)
 }
 
+function drawLevel(){
+    ctx.font="16px Arial"
+    ctx.fillStyle="#0095DD"
+    ctx.fillText("Level: "+level,210,20)
+}
+
 function collisionDetection(){
     for(c=0;c<brickColCount;c++){
         for(r=0;r<brickRowCount;r++){
@@ -50,8 +63,34 @@ function collisionDetection(){
                     b.status=0
                     score++
                 if(score==brickRowCount*brickColCount){
-                    alert("CONGRATS....YOU WON..")
-                    document.location.reload()
+                    if(level===maxLevel){
+                        alert("CONGRATS....YOU WON..")
+                        document.location.reload()
+                    }else{
+                        level++
+                        score=0
+                        brickRowCount++
+                        initBricks()
+                        dx+=2
+                        dy=-dy
+                        dy-=2
+                        x=(canvas.width/2)+Math.floor(Math.random()*50)-20
+                        y=(canvas.height-30)+Math.floor(Math.random()*50)-20
+                        paddleX=(canvas.width-paddleWidth)/2
+                        ctx.beginPath()
+                        ctx.rect(0,0,canvas.width,canvas.height)
+                        ctx.fillStyle="#0095DD"
+                        ctx.fill()
+                        ctx.font="16px Arial"
+                        ctx.fillStyle="#FFFFFF"
+                        ctx.fillText("Level "+(level-1)+" Completed..Starting New Level",110,150)
+                        ctx.closePath()
+                        paused=true
+                        setTimeout(function(){
+                            paused=false
+                            draw()
+                        },1000)
+                    }
                 }
                 }
             }
@@ -119,6 +158,7 @@ function draw(){
     drawScore()
     collisionDetection()
     drawLives()
+    drawLevel()
 
     if(y+dy<ballRadius)
     dy=-dy
@@ -131,10 +171,8 @@ function draw(){
                 alert("GAME OVER....")
                 document.location.reload()
             }else{
-                x=canvas.width/2
-                y=canvas.height/2
-                dx=2
-                dy=-2
+                x=(canvas.width/2)+Math.floor(Math.random()*50)-20
+                y=(canvas.height/2)+Math.floor(Math.random()*50)-20
                 paddleX=(canvas.width-paddleWidth)/2
             }
         }
@@ -149,6 +187,16 @@ function draw(){
     
     x=x+dx
     y=y+dy
+    if(!paused)
+        requestAnimationFrame(draw)
 }
 
-setInterval(draw,10)
+document.addEventListener("mousemove",mouseMoveHandler)
+
+function mouseMoveHandler(e){
+    var relativeX=e.clientX-canvas.offsetLeft
+    if(relativeX>0+paddleWidth/2 && relativeX<canvas.width-paddleWidth/2)
+    paddleX=relativeX-paddleWidth/2     
+}
+
+draw()
