@@ -1,4 +1,5 @@
 #myCanvas{
-    background-color: grey;
+    background-color: lightgrey;
     margin: 0 auto;
+    padding:0;
 }
