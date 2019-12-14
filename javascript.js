@@ -1,21 +1,21 @@
 var canvas=document.getElementById('myCanvas')
 var ctx=canvas.getContext("2d")
 
-var x=(canvas.width/2)+Math.floor(Math.random()*150)-10
-var y=(canvas.height/2)+Math.floor(Math.random()*150)-60
+var x=(canvas.width)+Math.floor(Math.random()*150)-10
+var y=(canvas.height)+Math.floor(Math.random()*150)-60
 var ballRadius=10
-var dx=3
-var dy=-3
+var dx=5
+var dy=-5
 var paddleHeight=10
 var paddleWidth=75
 var paddleX=(canvas.width-paddleWidth)/2
 var rightPressed=false
 var leftPressed=false
-var brickRowCount=3
-var brickColCount=5
+var brickRowCount=7
+var brickColCount=Math.floor((screen.width-10)/85)
 var brickPadding=10
 var brickOffsetTop=30
-var brickOffsetLeft=30
+var brickOffsetLeft=10
 var brickHeight=20
 var brickWidth=75
 var score=0
@@ -50,7 +50,7 @@ function drawLives(){
 function drawLevel(){
     ctx.font="16px Arial"
     ctx.fillStyle="#0095DD"
-    ctx.fillText("Level: "+level,210,20)
+    ctx.fillText("Level: "+level,630,20)
 }
 
 function collisionDetection(){
@@ -188,7 +188,7 @@ function draw(){
     x=x+dx
     y=y+dy
     if(!paused)
-        requestAnimationFrame(draw)
+    requestAnimationFrame(draw)
 }
 
 document.addEventListener("mousemove",mouseMoveHandler)
